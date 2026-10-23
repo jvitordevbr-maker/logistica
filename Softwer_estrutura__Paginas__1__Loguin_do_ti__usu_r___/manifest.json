@@ -1,0 +1,38 @@
+{
+  "display": "standalone",
+  "display_override": [
+    "standalone",
+    "minimal-ui",
+    "browser"
+  ],
+  "orientation": "any",
+  "id": "./",
+  "name": "LogiSys — Gestão de Estoque e Logística",
+  "short_name": "LogiSys",
+  "description": "Sistema de cadastro de produtos, estoque, mapa de viagem, carregamento e entregas.",
+  "start_url": "./",
+  "scope": "./",
+  "background_color": "#2563eb",
+  "theme_color": "#2563eb",
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "generator": "builder.puter.com"
+}

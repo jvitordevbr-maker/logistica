@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LogiSys — Gestão de Estoque e Logística</title>
+<meta name="description" content="Sistema de cadastro de produtos, estoque, mapa de viagem, carregamento e entregas.">
+<meta name="theme-color" content="#2563eb">
+<script>
+window.onerror=function(msg,src,line,col,err){window.parent.postMessage({type:'app-error',message:msg,source:src,lineno:line,colno:col,stack:err&&err.stack||''},'*');};
+window.onunhandledrejection=function(e){window.parent.postMessage({type:'app-error',message:'Unhandled promise rejection: '+(e.reason&&e.reason.message||e.reason||'unknown'),stack:e.reason&&e.reason.stack||''},'*');};
+window.addEventListener('error',function(e){var t=e&&e.target;if(t&&t!==window&&t.tagName==='SCRIPT'){var u=t.src||'';window.parent.postMessage({type:'app-error',message:'Failed to load script'+(u?': '+u:' (inline module)'),source:u},'*');}},true);
+(function(){var _f=window.fetch;window.fetch=function(){var a=arguments,u=typeof a[0]==='string'?a[0]:(a[0]&&a[0].url)||'';var p=_f.apply(this,a);p.then(function(r){if(r.status===500){r.clone().text().then(function(b){window.parent.postMessage({type:'fetch-error',url:u,status:500,body:b},'*');}).catch(function(){window.parent.postMessage({type:'fetch-error',url:u,status:500,body:''},'*');});}}).catch(function(e){window.parent.postMessage({type:'fetch-error',url:u,status:0,body:e.message||'fetch failed'},'*');});return p;};})();
+</script>
+<script src="https://builder.puter.com/runtime.js" defer></script>
+<script src="https://js.puter.com/v2/"></script>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="css/styles.css">
+    <!-- puter-pwa: generated, do not edit -->
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+    <link rel="apple-touch-icon" href="icons/apple-touch-icon-180.png">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="LogiSys">
+    <!-- /puter-pwa -->
+</head>
+<body class="bg-slate-50 text-slate-900 antialiased">
+
+<!-- LOGIN -->
+<div id="login-screen" class="min-h-screen flex items-center justify-center p-5 hidden">
+  <div class="w-full max-w-sm">
+    <div class="flex items-center gap-3 mb-8">
+      <div class="w-11 h-11 rounded-xl bg-[#2563eb] flex items-center justify-center">
+        <svg viewBox="0 0 24 24" class="w-6 h-6" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 17h4V5H2v12h3"/><path d="M20 17h2v-3.34a4 4 0 0 0-1.17-2.83L19 9h-5v8h1"/><circle cx="7.5" cy="17.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg>
+      </div>
+      <div>
+        <h1 class="text-xl font-semibold tracking-tight">LogiSys</h1>
+        <p class="text-sm text-slate-500">Estoque &amp; Logística</p>
+      </div>
+    </div>
+    <div class="card p-6">
+      <h2 class="text-base font-semibold mb-1">Acessar o sistema</h2>
+      <p class="text-sm text-slate-500 mb-5">Informe seu usuário e senha.</p>
+      <form id="login-form" class="space-y-4">
+        <div>
+          <label class="label">Usuário</label>
+          <input id="login-user" class="input" autocomplete="username" placeholder="ex: admin" required>
+        </div>
+        <div>
+          <label class="label">Senha</label>
+          <input id="login-pass" type="password" class="input" autocomplete="current-password" placeholder="••••••" required>
+        </div>
+        <p id="login-error" class="text-sm text-red-600 hidden"></p>
+        <button type="submit" id="login-btn" class="btn btn-primary w-full">Entrar</button>
+      </form>
+    </div>
+    <p class="text-xs text-slate-400 text-center mt-5">Acesso restrito a colaboradores autorizados.</p>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app-screen" class="hidden">
+  <div class="flex min-h-screen">
+    <!-- Sidebar -->
+    <aside id="sidebar" class="sidebar">
+      <div class="px-5 py-5 flex items-center gap-3 border-b border-white/10">
+        <div class="w-9 h-9 rounded-lg bg-[#2563eb] flex items-center justify-center shrink-0">
+          <svg viewBox="0 0 24 24" class="w-5 h-5" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 17h4V5H2v12h3"/><path d="M20 17h2v-3.34a4 4 0 0 0-1.17-2.83L19 9h-5v8h1"/><circle cx="7.5" cy="17.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg>
+        </div>
+        <div class="min-w-0">
+          <div class="text-white font-semibold text-sm leading-tight">LogiSys</div>
+          <div class="text-[11px] text-slate-400">Estoque &amp; Logística</div>
+        </div>
+      </div>
+      <nav id="nav" class="flex-1 overflow-y-auto py-3 px-3 space-y-1"></nav>
+      <div class="px-3 py-3 border-t border-white/10">
+        <div class="flex items-center gap-3 px-2 py-2">
+          <div id="user-avatar" class="w-8 h-8 rounded-full bg-[#1e293b] text-slate-200 flex items-center justify-center text-xs font-semibold shrink-0"></div>
+          <div class="min-w-0 flex-1">
+            <div id="user-name" class="text-sm text-slate-100 truncate"></div>
+            <div id="user-role" class="text-[11px] text-slate-400 truncate"></div>
+          </div>
+          <button id="logout-btn" title="Sair" class="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-white/10">
+            <svg viewBox="0 0 24 24" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          </button>
+        </div>
+      </div>
+    </aside>
+    <div id="sidebar-backdrop" class="fixed inset-0 bg-slate-900/50 z-30 hidden lg:hidden"></div>
+
+    <!-- Main -->
+    <main class="flex-1 min-w-0 flex flex-col">
+      <header class="h-14 bg-white border-b border-slate-200 flex items-center gap-3 px-4 sticky top-0 z-20">
+        <button id="menu-btn" class="lg:hidden p-2 -ml-2 rounded-lg hover:bg-slate-100">
+          <svg viewBox="0 0 24 24" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+        <h2 id="page-title" class="text-[15px] font-semibold tracking-tight"></h2>
+        <div class="ml-auto flex items-center gap-2">
+          <button id="refresh-btn" class="btn btn-ghost h-9 px-3 text-[13px]">
+            <svg viewBox="0 0 24 24" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/><path d="M3 21v-5h5"/></svg>
+            <span class="hidden sm:inline">Atualizar</span>
+          </button>
+        </div>
+      </header>
+      <div id="view" class="flex-1 p-4 sm:p-6 max-w-[1400px] w-full"></div>
+    </main>
+  </div>
+</div>
+
+<div id="modal-root"></div>
+<div id="toast-root" class="fixed bottom-4 right-4 z-[80] space-y-2"></div>
+<div id="boot" class="min-h-screen flex items-center justify-center text-slate-400 text-sm">Carregando…</div>
+
+<script type="module" src="js/app.js"></script>
+</body>
+</html>
